@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "experimentalDecorators": false,
+        "baseUrl": ".",
+        "skipLibCheck": true,
+        "target": "ESNext",
+        "module": "NodeNext",
+        "rewriteRelativeImportExtensions": true,
+        "allowImportingTsExtensions": true,
+        "paths": {
+            "c/gearsetArchivedRecordsViewer": [
+                "gearsetArchivedRecordsViewer/gearsetArchivedRecordsViewer"
+            ],
+            "c/gearsetArchiveViewerMessages": [
+                "gearsetArchiveViewerMessages/gearsetArchiveViewerMessages.ts"
+            ]
+        }
+    },
+    "include": ["**/*.ts", "*.d.ts"],
+    "typeAcquisition": {
+        "include": ["jest"]
+    },
+    "exclude": ["**/__tests__/**"]
+}

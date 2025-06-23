@@ -1,0 +1,38 @@
+{
+    "name": "archive-viewer-connector",
+    "type": "module",
+    "version": "0.0.0",
+    "scripts": {
+        "build": "tsc --project ./force-app/main/default/lwc/tsconfig.compile.json",
+        "deploy:dev": "npx dotenvx run -f .env.dev -- sf project deploy start",
+        "validate:dev": "dotenvx run -f .env.dev -- sf project deploy validate --source-dir force-app",
+        "package:prod": "npm run build && npx dotenvx run -f .env.prod -- sf project convert source --output-dir metadataPackage",
+        "package:staging": "npm run build && npx dotenvx run -f .env.staging -- sf project convert source --output-dir metadataPackage && ./add-prefixes.sh metadataPackage stg",
+        "package:dev": "npm run build && npx dotenvx run -f .env.dev -- sf project convert source --output-dir metadataPackage && ./add-prefixes.sh metadataPackage dev",
+        "package:zip": "zip -r metadataPackage.zip metadataPackage",
+        "test": "npm run test:unit",
+        "test:unit": "sfdx-lwc-jest",
+        "test:unit:watch": "sfdx-lwc-jest --watch",
+        "test:unit:debug": "sfdx-lwc-jest --debug",
+        "format": "prettier . -w",
+        "format-check": "prettier --check .",
+        "eslint": "eslint -c eslint.config.js --max-warnings=0 ./force-app/main/default/lwc",
+        "ci:eslint": "npm run eslint -c eslint.config.js ./force-app/main/default/lwc",
+        "ci:test": "npm run test",
+        "ci:build": "tsc --project ./force-app/main/default/lwc/tsconfig.compile.json || npm run --silent ci:build-errored",
+        "ci:format-check": "npm run format-check"
+    },
+    "devDependencies": {
+        "@dotenvx/dotenvx": "1.40.0",
+        "@eslint/js": "^9.24.0",
+        "@salesforce/sfdx-lwc-jest": "^7.0.1",
+        "@types/jest": "^29.5.14",
+        "eslint-plugin-jest": "^28.11.0",
+        "globals": "^16.0.0",
+        "lwc": "^8.16.4",
+        "prettier": "3.5.3",
+        "prettier-plugin-apex": "2.2.6",
+        "typescript": "^5.8.2",
+        "typescript-eslint": "^8.29.1"
+    }
+}

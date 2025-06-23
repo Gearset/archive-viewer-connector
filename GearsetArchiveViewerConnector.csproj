@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Gearset.ArchiveViewerConnector</PackageId>
+    <Description>The Gearset Archive Connector Viewer metadata.</Description>
+    <PackageTags>static content salesforce metadata</PackageTags>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageProjectUrl>https://github.com/Gearset/archive-viewer-connector</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Gearset/archive-viewer-connector.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="archive-viewer-connector.zip" Pack="true" PackagePath="contentFiles/any/any/archive-viewer-connector.zip" />
+  </ItemGroup>
+
+</Project>

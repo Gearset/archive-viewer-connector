@@ -1,0 +1,28 @@
+{
+    "packageDirectories": [
+        {
+            "path": "force-app",
+            "default": true
+        }
+    ],
+    "name": "GearsetArchiveViewer",
+    "namespace": "",
+    "sfdcLoginUrl": "https://login.salesforce.com",
+    "replacements": [
+        {
+            "filename": "force-app/main/default/namedCredentials/GearsetArchiveViewer.namedCredential",
+            "stringToReplace": "{API_URL}",
+            "replaceWithEnv": "API_URL"
+        },
+        {
+            "filename": "force-app/main/default/cspTrustedSites/Gearset_Archive_Viewer.cspTrustedSite",
+            "stringToReplace": "{IFRAME_URL}",
+            "replaceWithEnv": "IFRAME_URL"
+        },
+        {
+            "glob": "force-app/main/default/lwc/**/*.js",
+            "stringToReplace": "{IFRAME_URL}",
+            "replaceWithEnv": "IFRAME_URL"
+        }
+    ]
+}
