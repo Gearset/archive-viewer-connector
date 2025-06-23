@@ -23,6 +23,6 @@ If no tests are being added, what is the reason? -->
 ### What do users need to know about this change?
 
 <!-- Does it need a support doc?
-Do we need to let a user know that a fix has been shipped? 
+Do we need to let a user know that a fix has been shipped?
 Are there any aspects of the behaviour that users might find surprising?
  -->
