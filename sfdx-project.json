@@ -5,7 +5,7 @@
             "default": true
         }
     ],
-    "name": "GearsetArchiveViewer",
+    "name": "GearsetArchiveViewerConnector",
     "namespace": "",
     "sfdcLoginUrl": "https://login.salesforce.com",
     "replacements": [
