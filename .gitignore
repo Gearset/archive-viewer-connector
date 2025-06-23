@@ -1,0 +1,31 @@
+# Salesforce files
+.sfdx/
+.sf/
+
+# Output files
+output/
+obj/
+bin/
+metadataPackage*
+
+# Solution file
+archive-viewer-connector.sln
+
+# Environment variables
+.env.dev
+
+node_modules
+
+force-app/**.js
+
+jsconfig.json
+
+*.js
+
+# Idea files
+.idea/
+
+# Exceptions
+
+!force-app/main/default/lwc/gearsetArchivedRecordsViewer/gearsetArchivedRecordsViewerHelper.js
+!force-app/test/jest-mocks/lightning/navigation/index.js

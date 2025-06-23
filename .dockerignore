@@ -1,0 +1,16 @@
+# Salesforce files
+ .sfdx/
+.sf/
+
+# Output files
+output/
+obj/
+bin/
+
+# Solution file
+archive-viewer-connector.sln
+
+# Environment variables
+.env.dev
+
+node_modules

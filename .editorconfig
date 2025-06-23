@@ -1,0 +1,6 @@
+root = true
+
+[force-app/main/default/lwc/**/*.{js,ts,css}]
+insert_final_newline = true
+trim_trailing_whitespace = true
+end_of_line = lf
