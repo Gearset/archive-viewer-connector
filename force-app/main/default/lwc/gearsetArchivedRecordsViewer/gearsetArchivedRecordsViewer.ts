@@ -79,12 +79,21 @@ export default class GearsetArchivedRecordsViewer extends NavigationMixin(
     }
 
     handleMessageEvent = (event: ApiMessageRequestEvent) => {
-        if (event.origin !== "{IFRAME_URL}" || !isApiMessageEvent(event)) {
+        if (
+            event.origin !== "{IFRAME_URL}" ||
+            !this.isFromOwnIframe(event) ||
+            !isApiMessageEvent(event)
+        ) {
             return;
         }
 
         void this.handleApiMessageEvent(event);
     };
+
+    isFromOwnIframe(event: MessageEvent) {
+        const iframe = this.template?.querySelector("iframe");
+        return !!iframe && event.source === iframe.contentWindow;
+    }
 
     handleRequest(request: ApiMessageRequest) {
         switch (request.method) {
