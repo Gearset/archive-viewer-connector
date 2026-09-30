@@ -9,10 +9,7 @@
         "allowImportingTsExtensions": true,
         "paths": {
             "c/gearsetArchivedRecordsViewer": [
-                "gearsetArchivedRecordsViewer/gearsetArchivedRecordsViewer"
-            ],
-            "c/gearsetArchiveViewerMessages": [
-                "gearsetArchiveViewerMessages/gearsetArchiveViewerMessages.ts"
+                "gearsetArchivedRecordsViewer/gearsetArchivedRecordsViewer.ts"
             ]
         }
     },
