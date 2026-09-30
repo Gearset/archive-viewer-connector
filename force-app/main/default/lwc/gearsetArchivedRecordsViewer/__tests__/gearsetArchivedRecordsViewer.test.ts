@@ -115,6 +115,8 @@ const mountViewer = () => {
     return { element, iframeWindow };
 };
 
+const flushPromises = () => new Promise((resolve) => setTimeout(resolve, 0));
+
 describe("c-gearset-archived-records-viewer", () => {
     afterEach(() => {
         // The jsdom instance is shared across test cases in a single file so reset the DOM
@@ -242,6 +244,53 @@ describe("c-gearset-archived-records-viewer", () => {
             expect(response).toBe(expectedResponse);
         }
     );
+
+    it("ignores requests that did not come from its own iframe", async () => {
+        (getRequest as jest.Mock).mockResolvedValue(
+            JSON.stringify(GET_RESPONSE)
+        );
+
+        mountViewer();
+        mockPostMessageFrom(window);
+
+        window.parent.postMessage(
+            {
+                type: "Request",
+                method: "GET",
+                endpoint: "",
+                correlationId: "foreign"
+            } satisfies ApiMessageRequest,
+            { targetOrigin: "{IFRAME_URL}" }
+        );
+        await flushPromises();
+
+        expect(getRequest).not.toHaveBeenCalled();
+    });
+
+    it("proxies a request once when several connectors are mounted", async () => {
+        (getRequest as jest.Mock).mockResolvedValue(
+            JSON.stringify(GET_RESPONSE)
+        );
+
+        const { iframeWindow } = mountViewer();
+        mountViewer();
+        mountViewer();
+        mockPostMessageFrom(iframeWindow);
+
+        const response = await sendRequestAndWaitForResponse<string>(
+            {
+                type: "Request",
+                method: "GET",
+                endpoint: "",
+                correlationId: "once"
+            },
+            "{IFRAME_URL}"
+        );
+        await flushPromises();
+
+        expect(response).toBe(GET_RESPONSE);
+        expect(getRequest).toHaveBeenCalledTimes(1);
+    });
 
     const navigateTestParams = {
         tabOpen: {
