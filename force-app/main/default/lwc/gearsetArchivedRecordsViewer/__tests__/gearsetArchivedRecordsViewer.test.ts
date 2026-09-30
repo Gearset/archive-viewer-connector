@@ -78,11 +78,14 @@ const POST_RESPONSE = "POST REQUEST";
 
 // Delivers a postMessage as a "message" event on window, stamped as coming from `from`.
 const dispatchOnWindowFrom = (from: Window) =>
-    jest.fn((message: unknown, options?: WindowPostMessageOptions) => {
+    jest.fn((message: unknown, options?: string | WindowPostMessageOptions) => {
         window.dispatchEvent(
             new MessageEvent("message", {
                 data: message,
-                origin: options?.targetOrigin,
+                origin:
+                    typeof options === "string"
+                        ? options
+                        : options?.targetOrigin,
                 source: from
             })
         );
