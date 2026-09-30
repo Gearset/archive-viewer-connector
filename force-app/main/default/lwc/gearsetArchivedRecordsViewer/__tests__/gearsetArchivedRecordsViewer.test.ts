@@ -76,12 +76,53 @@ jest.mock(
 const GET_RESPONSE = "GET REQUEST";
 const POST_RESPONSE = "POST REQUEST";
 
+// Delivers a postMessage as a "message" event on window, stamped as coming from `from`.
+const dispatchOnWindowFrom = (from: Window) =>
+    jest.fn((message: unknown, options?: WindowPostMessageOptions) => {
+        window.dispatchEvent(
+            new MessageEvent("message", {
+                data: message,
+                origin: options?.targetOrigin,
+                source: from
+            })
+        );
+    });
+
+// In the browser the viewer posts to its parent and the connector replies to
+// event.source. The test collapses both windows onto one, so both directions are
+// delivered on window, each stamped with the sender it would really have had.
+const mockPostMessageFrom = (iframeWindow: Window) => {
+    window.postMessage = dispatchOnWindowFrom(iframeWindow); // viewer -> parent
+    iframeWindow.postMessage = dispatchOnWindowFrom(window); // parent -> viewer
+};
+
+const mountViewer = () => {
+    const element = createElement<GearsetArchivedRecordsViewer>(
+        "c-gearset-archived-records-viewer",
+        {
+            is: GearsetArchivedRecordsViewer
+        }
+    );
+
+    document.body.appendChild(element);
+
+    const iframeWindow =
+        element.shadowRoot?.querySelector("iframe")?.contentWindow;
+    if (!iframeWindow) {
+        throw new Error("Expected the connector to render an iframe");
+    }
+
+    return { element, iframeWindow };
+};
+
 describe("c-gearset-archived-records-viewer", () => {
     afterEach(() => {
         // The jsdom instance is shared across test cases in a single file so reset the DOM
         while (document.body.firstChild) {
             document.body.removeChild(document.body.firstChild);
         }
+
+        jest.clearAllMocks();
     });
 
     it("passes record id, object name and version to iframe URL with default route", () => {
@@ -182,22 +223,8 @@ describe("c-gearset-archived-records-viewer", () => {
         async ({ method, body, requestFunction, expectedResponse }) => {
             requestFunction.mockResolvedValue(JSON.stringify(expectedResponse));
 
-            // Ensure that post message includes a source
-            window.postMessage = jest.fn((message, options) => {
-                const event = new MessageEvent("message", {
-                    data: message,
-                    origin: options?.targetOrigin,
-                    source: window
-                });
-
-                window.dispatchEvent(event);
-            });
-
-            const element = createElement("c-gearset-archived-records-viewer", {
-                is: GearsetArchivedRecordsViewer
-            });
-
-            document.body.appendChild(element);
+            const { iframeWindow } = mountViewer();
+            mockPostMessageFrom(iframeWindow);
 
             const request = {
                 type: "Request",
@@ -289,23 +316,9 @@ describe("c-gearset-archived-records-viewer", () => {
     `("Sends 'navigation' via NavigationMixin", async ({ testParams }) => {
         const navigateHandler = jest.fn();
 
-        window.postMessage = jest.fn((message, options) => {
-            const event = new MessageEvent("message", {
-                data: message,
-                origin: options?.targetOrigin,
-                source: window
-            });
-
-            window.dispatchEvent(event);
-        });
-
-        const element = createElement("c-gearset-archived-records-viewer", {
-            is: GearsetArchivedRecordsViewer
-        });
-
+        const { element, iframeWindow } = mountViewer();
         element.addEventListener("navigate", navigateHandler);
-
-        document.body.appendChild(element);
+        mockPostMessageFrom(iframeWindow);
 
         await sendRequestAndWaitForResponse(
             {
